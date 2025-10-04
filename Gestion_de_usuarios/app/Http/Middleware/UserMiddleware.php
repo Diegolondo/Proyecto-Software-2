@@ -16,7 +16,7 @@ class UserMiddleware
     public function handle(Request $request, Closure $next)
     {
         $apiKey = $request->header('X-API-Key');
-        $expectedApiKey = env('API_KARDEX_KEY');
+        $expectedApiKey = env('API_KEY');
         if ($apiKey !== $expectedApiKey) {
             return response()->json([
                 'message' => 'Acceso denegado. Clave API incorrecta.'

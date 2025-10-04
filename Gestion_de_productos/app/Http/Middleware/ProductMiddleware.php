@@ -15,6 +15,7 @@ class ProductMiddleware
      */
       public function handle(Request $request, Closure $next)
     {
+        
         $apiKey = $request->header('X-API-Key');
         $expectedApiKey = env('API_KARDEX_KEY');
         if ($apiKey !== $expectedApiKey) {

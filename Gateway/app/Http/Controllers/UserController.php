@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -16,18 +17,11 @@ class UserController extends Controller
 }
     public function index()
     {
+
         $url = $this->apiUrl . '/users/';
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
         return $response->json();
 }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,20 +34,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(string $id)
     {
-        $user = Auth::id();
-        $url = $this->apiUrl . '/users/show'. $user;
+        $url = $this->apiUrl . '/users/'. $id;
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
         return $response->json();
-}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -61,7 +46,11 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-             //
+        $url = $this->apiUrl . '/users/' . $id;
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])
+            ->put($url, $request->all());
+
+        return $response->json();
     }
 
     /**

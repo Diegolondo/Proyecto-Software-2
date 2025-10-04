@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -11,7 +12,7 @@ class UserController extends Controller
      */
     public function index()
     {
-                $users = User::all();
+        $users = User::all();
         return response()->json($users, 200); 
 
     }
@@ -55,7 +56,9 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-           //
+        $user = User::find($id);
+        $user->update($request->all());
+        return response()->json($user, 200);
     }
 
     /**
