@@ -23,11 +23,14 @@ public function login(Request $request)
 
 public function register(Request $request)
 {
+
     $user = User::create([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => bcrypt($request->password)
+        'password' => bcrypt($request->password),
+        'role_id' => 2
     ]);
+    
     return response()->json([
         'message' => 'Usuario creado con éxito',
         'user' => $user
