@@ -9,6 +9,7 @@ class Authenticate extends Middleware
 {
     protected function redirectTo(Request $request): ?string
     {
+        return response()->json(["message"=>$request->all()]);
         if ($request->expectsJson()) {
             return null;
         }

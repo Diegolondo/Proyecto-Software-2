@@ -22,8 +22,8 @@ Route::middleware('auth:api')->group(function () {
 // Rutas privadas para todos los usuarios autenticados
 Route::middleware(['auth:api', 'role:admin|user'])->group(function () 
 { 
-   Route::post('logout', [AuthController::class, 'logout']); 
-   Route::get('/products', [ProductController::class, 'index']);       // Listar productos
+    Route::post('logout', [AuthController::class, 'logout']); 
+    Route::get('/products', [ProductController::class, 'index']);       // Listar productos
 }); 
 // Rutas privadas solo para usuarios con rol admin
 Route::middleware(['auth:api', 'role:admin'])->group(function () 
@@ -34,8 +34,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function ()
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-    //Rutas Gestion Productos
-    Route::get('/products', [ProductController::class, 'index']); 
+    //Rutas Gestion Productos 
     Route::post('/products', [ProductController::class, 'store']);      // Crear producto
     Route::get('/products/{id}', [ProductController::class, 'show']);   // Ver producto por ID
     Route::put('/products/{id}', [ProductController::class, 'update']); // Actualizar producto

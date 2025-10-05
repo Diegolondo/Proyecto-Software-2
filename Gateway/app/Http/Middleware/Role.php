@@ -11,6 +11,7 @@ class Role
  public function handle(Request $request, Closure $next, $roles)
 
 {
+	
 	$rol = explode('|', $roles);
 
 	$roleName = $request->user()->role->label;
