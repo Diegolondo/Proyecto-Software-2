@@ -23,13 +23,42 @@ class ProductController extends Controller
         return response()->json($products, 200); 
     }
 
-    public function store(Request $request)
-    {
-        $product = Product::create($request->all());
-        $url = $this->apiUrl . '/send-email';
-        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
-        return response()->json($response->json());
+   public function store(Request $request)
+{
+    //  Guardar producto en base de datos local (MySQL)
+    $product = Product::create([
+        'nombre' => $request->input('nombre'),
+        'precio' => $request->input('precio'),
+        'cantidad' => $request->input('cantidad'),
+    ]);
+
+    //  Guardar producto también en Firebase
+    try {
+        $database = app('firebase.database');
+        $database->getReference('products')->push([
+            'nombre' => $request->input('nombre'),
+            'precio' => $request->input('precio'),
+            'cantidad' => $request->input('cantidad'),
+            'created_at' => now()->toDateTimeString(),
+        ]);
+    } catch (\Exception $e) {
+        // Si falla Firebase, no interrumpe el proceso ni el envío del correo
+        \Log::error('Error al guardar en Firebase: ' . $e->getMessage());
     }
+
+    // Mantener el envío de correo (no se modifica)
+    $url = $this->apiUrl . '/send-email';
+    $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
+
+    //  Respuesta final
+    return response()->json([
+        'message' => 'Producto creado correctamente',
+        'producto' => $product,
+        'email_response' => $response->json(),
+    ], 201);
+}
+
+
 public function show($id)
     {
         $product = Product::find($id);
