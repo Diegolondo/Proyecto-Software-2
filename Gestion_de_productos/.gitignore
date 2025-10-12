@@ -17,4 +17,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/config/gestion-de-inventarios-23c20-firebase-adminsdk-fbsvc-2e33e997cd.json
+#/config/gestion-de-inventarios-23c20-firebase-adminsdk-fbsvc-2e33e997cd.json
