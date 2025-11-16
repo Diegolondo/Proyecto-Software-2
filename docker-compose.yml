@@ -1,0 +1,100 @@
+version: "3.9"
+
+services:
+
+  # Laravel Gateway
+  gateway:
+    build:
+      context: ./Docker
+      dockerfile: Docker.Laravel
+    container_name: Gateway
+    ports:
+      - "8000:8000"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.10
+    command: sh -c "composer update && php artisan key:generate && php artisan migrate:refresh && php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      - db
+
+  # Gestión Usuarios
+  gestion_usuarios:
+    build:
+      context: ./Docker
+      dockerfile: Docker.Laravel
+    container_name: Usuarios
+    ports:
+      - "8001:8000"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.11
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      - db
+
+  # Gestión Productos
+  gestion_productos:
+    build:
+      context: ./Docker
+      dockerfile: Docker.Laravel
+    container_name: Productos
+    ports:
+      - "8002:8000"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.12
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      - db
+
+  # Gestión Reportes
+  gestion_reportes:
+    build:
+      context: ./Docker
+      dockerfile: Docker.Laravel
+    container_name: Reportes
+    ports:
+      - "8003:8000"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.13
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      - db
+
+  # Flask Notificaciones
+  notificaciones:
+    build:
+      context: ./API_Flask
+      dockerfile: Dockerfile.Flask
+    container_name: Notificaciones
+    ports:
+      - "5000:5000"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.14
+    command: python Gestion_de_notificaciones.py
+
+
+  # Base de datos MySQL
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: proyecto_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    container_name: db
+    ports:
+      - "3306:3306"
+    networks:
+      my_network:
+        ipv4_address: 192.168.0.20
+
+# Red definida con subnet fija
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
